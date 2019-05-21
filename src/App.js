@@ -9,12 +9,9 @@ class App extends Component {
 
   state = {
     persons:[
-      {name: 'Koku', age: 34},
-      {name: 'Patrizio', age: 42},
-      {name: 'Gonzalo', age: 38},
-      {name: 'Koku', age: 34},
-      {name: 'Patrizio', age: 42},
-      {name: 'Gonzalo', age: 38}
+      {id: 'fsdfsdf', name: 'Koku', age: 34},
+      {id: 'fsdfsadfdf', name: 'Patrizio', age: 42},
+      {id: 'dd', name: 'Gonzalo', age: 38}
     ],
     otherState: {company:'DCI'},
     myStyle :{
@@ -25,13 +22,20 @@ class App extends Component {
     showPerson: false
   }
 
-  changeNameHandler = (event) => {
+  changeNameHandler = (event, id) => {
+    const personIndex = this.state.persons.findIndex(person => {
+      return person.id === id;
+    });
+
+    const p = {...this.state.persons[personIndex]};
+
+    p.name = event.target.value;
+
+    let person = [...this.state.persons];
+    person[personIndex] = p;
+
     this.setState({
-      persons:[
-        {name: event.target.value, age: 34},
-        {name: 'Dali', age: 42},
-        {name: 'Enrica', age: 38}
-    ]
+      persons:person
     });
   }
 
@@ -67,10 +71,15 @@ class App extends Component {
       persons = (
       <div>
         {this.state.persons.map((value, index) => {
-          return <Person 
+          return <Person
           name={value.name} 
           age={value.age}
-          click = {()=>this.deletePersonHandler(index)}
+          click = {()=>this.deletePersonHandler(index)} 
+          key={value.id}
+          change={(event)=>{
+            this.changeNameHandler(event, value.id);
+          }
+        }
         />
         })}
       </div>
